@@ -1,0 +1,66 @@
+{
+    "request": {
+        "path": "http://localhost:8080/v1/resource_provider/request_transaction",
+        "params": {
+            "method": "POST",
+            "body": "{\"ref\":\"unittest\",\"request\":\"esr://gmMsfmIRpc7x7DpLh8nvg-zz9VdvrLYRihbJ-mIxXW5CYY4vA8OyJhPmVwahDAwM4bo2Z88yCrhx3DxY6vuYAQQmbDxlARMAssE0IwMEsLj6B4No8fKMxKK07MwShcxihZKMVIWk1OISBRtjoDoA\",\"signer\":{\"actor\":\"wharfkit1131\",\"permission\":\"test\"}}"
+        }
+    },
+    "headers": {
+        "access-control-allow-headers": "authorization, content-type",
+        "access-control-allow-methods": "OPTIONS, GET, POST",
+        "access-control-allow-origin": "*",
+        "access-control-request-method": "*",
+        "connection": "close",
+        "content-length": "740",
+        "date": "Tue, 20 Dec 2022 23:08:09 GMT"
+    },
+    "status": 200,
+    "json": {
+        "code": 200,
+        "data": {
+            "request": [
+                "transaction",
+                {
+                    "expiration": "2022-12-20T23:13:10",
+                    "ref_block_num": 22981,
+                    "ref_block_prefix": 3881932584,
+                    "max_net_usage_words": 0,
+                    "max_cpu_usage_ms": 5,
+                    "delay_sec": 0,
+                    "context_free_actions": [],
+                    "actions": [
+                        {
+                            "account": "greymassnoop",
+                            "name": "noop",
+                            "authorization": [
+                                {
+                                    "actor": "greymassfuel",
+                                    "permission": "cosign"
+                                }
+                            ],
+                            "data": ""
+                        },
+                        {
+                            "account": "eosio.token",
+                            "name": "transfer",
+                            "authorization": [
+                                {
+                                    "actor": "wharfkit1131",
+                                    "permission": "test"
+                                }
+                            ],
+                            "data": "104608d9c1754de390b1cad9c1754de3010000000000000004454f53000000001777686172666b6974206973207468652062657374203c33"
+                        }
+                    ],
+                    "transaction_extensions": []
+                }
+            ],
+            "signatures": [
+                "SIG_K1_KA27QqnBm8wHEz28jWDMHM1pCiLrERwG9eWxRqbmMasaJVm8fsJUu9ymYgYDi4y4GC7xJorECQEpMLHqn1G3RPo37j6xtD"
+            ],
+            "version": null
+        }
+    },
+    "text": "{\"code\":200,\"data\":{\"request\":[\"transaction\",{\"expiration\":\"2022-12-20T23:13:10\",\"ref_block_num\":22981,\"ref_block_prefix\":3881932584,\"max_net_usage_words\":0,\"max_cpu_usage_ms\":5,\"delay_sec\":0,\"context_free_actions\":[],\"actions\":[{\"account\":\"greymassnoop\",\"name\":\"noop\",\"authorization\":[{\"actor\":\"greymassfuel\",\"permission\":\"cosign\"}],\"data\":\"\"},{\"account\":\"eosio.token\",\"name\":\"transfer\",\"authorization\":[{\"actor\":\"wharfkit1131\",\"permission\":\"test\"}],\"data\":\"104608d9c1754de390b1cad9c1754de3010000000000000004454f53000000001777686172666b6974206973207468652062657374203c33\"}],\"transaction_extensions\":[]}],\"signatures\":[\"SIG_K1_KA27QqnBm8wHEz28jWDMHM1pCiLrERwG9eWxRqbmMasaJVm8fsJUu9ymYgYDi4y4GC7xJorECQEpMLHqn1G3RPo37j6xtD\"],\"version\":null}}"
+}

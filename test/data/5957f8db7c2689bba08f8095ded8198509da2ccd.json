@@ -1,0 +1,97 @@
+{
+    "request": {
+        "path": "http://localhost:8080/v1/resource_provider/request_transaction",
+        "params": {
+            "method": "POST",
+            "body": "{\"ref\":\"unittest\",\"request\":\"esr://gmMsfmIRpc7x7DpLh8nvg-zz9VdvrLYRihbJ-mIxXW5CYY4vA8OyJhPmVwahDAwM4bo2Z88yBjhx3DxY6vuYAQQmbDwVDRMAssE0IwMEsLj6B4Noq_KMxKK07MwShYKc0vTMPAVdhaLU4vzSouRUhYKi_LLMlNQihZLU4hIFjcScnPxyt9TUYiuFkqLSVE2gUQA\",\"signer\":{\"actor\":\"wharfkit1115\",\"permission\":\"test\"}}"
+        }
+    },
+    "headers": {
+        "access-control-allow-headers": "authorization, content-type",
+        "access-control-allow-methods": "OPTIONS, GET, POST",
+        "access-control-allow-origin": "*",
+        "access-control-request-method": "*",
+        "connection": "close",
+        "date": "Wed, 21 Dec 2022 01:14:06 GMT",
+        "transfer-encoding": "chunked"
+    },
+    "status": 402,
+    "json": {
+        "code": 402,
+        "message": "Fee required to complete transaction.",
+        "data": {
+            "costs": {
+                "cpu": "0.0009 EOS",
+                "net": "0.0001 EOS",
+                "ram": "0.0397 EOS"
+            },
+            "fee": "0.0407 EOS",
+            "ref": "unittest",
+            "request": [
+                "transaction",
+                {
+                    "expiration": "2022-12-21T01:19:06",
+                    "ref_block_num": 38096,
+                    "ref_block_prefix": 1803115454,
+                    "max_net_usage_words": 0,
+                    "max_cpu_usage_ms": 5,
+                    "delay_sec": 0,
+                    "context_free_actions": [],
+                    "actions": [
+                        {
+                            "account": "greymassnoop",
+                            "name": "noop",
+                            "authorization": [
+                                {
+                                    "actor": "greymassfuel",
+                                    "permission": "cosign"
+                                }
+                            ],
+                            "data": ""
+                        },
+                        {
+                            "account": "eosio.token",
+                            "name": "transfer",
+                            "authorization": [
+                                {
+                                    "actor": "wharfkit1115",
+                                    "permission": "test"
+                                }
+                            ],
+                            "data": "504208d9c1754de3000000403210955e970100000000000004454f5300000000234675656c205472616e73616374696f6e20466565207c207265663d756e697474657374"
+                        },
+                        {
+                            "account": "eosio",
+                            "name": "buyram",
+                            "authorization": [
+                                {
+                                    "actor": "greymassfuel",
+                                    "permission": "buyram"
+                                }
+                            ],
+                            "data": "10955e181be9d565504208d9c1754de38b0100000000000004454f5300000000"
+                        },
+                        {
+                            "account": "eosio.token",
+                            "name": "transfer",
+                            "authorization": [
+                                {
+                                    "actor": "wharfkit1115",
+                                    "permission": "test"
+                                }
+                            ],
+                            "data": "504208d9c1754de390b1cad9c1754de3010000000000000004454f53000000003a77686172666b697420706c7567696e202d207265736f757263652070726f766964657220746573742028616c6c6f77466565733a207472756529"
+                        }
+                    ],
+                    "transaction_extensions": []
+                }
+            ],
+            "signatures": [
+                "SIG_K1_K78XWp8dDNoYTVEuxnjZLRFFJcLboHJkdMLUimxLFf6ifQiT1BtpLVouShVTQgktbrxHUQsC37e72iCGYRFzRos9Yayjht",
+                "SIG_K1_KasDdL7ZXWBA5oBJR7e2fcZ6TWoiSgPc9cotiEe7hz36SSeow9pz79yGjn5nTJDXEqgv2fzhUfu7BP7aksShHcxF6nmaEE"
+            ],
+            "version": null
+        }
+    },
+    "text": "{\"code\":402,\"message\":\"Fee required to complete transaction.\",\"data\":{\"costs\":{\"cpu\":\"0.0009 EOS\",\"net\":\"0.0001 EOS\",\"ram\":\"0.0397 EOS\"},\"fee\":\"0.0407 EOS\",\"ref\":\"unittest\",\"request\":[\"transaction\",{\"expiration\":\"2022-12-21T01:19:06\",\"ref_block_num\":38096,\"ref_block_prefix\":1803115454,\"max_net_usage_words\":0,\"max_cpu_usage_ms\":5,\"delay_sec\":0,\"context_free_actions\":[],\"actions\":[{\"account\":\"greymassnoop\",\"name\":\"noop\",\"authorization\":[{\"actor\":\"greymassfuel\",\"permission\":\"cosign\"}],\"data\":\"\"},{\"account\":\"eosio.token\",\"name\":\"transfer\",\"authorization\":[{\"actor\":\"wharfkit1115\",\"permission\":\"test\"}],\"data\":\"504208d9c1754de3000000403210955e970100000000000004454f5300000000234675656c205472616e73616374696f6e20466565207c207265663d756e697474657374\"},{\"account\":\"eosio\",\"name\":\"buyram\",\"authorization\":[{\"actor\":\"greymassfuel\",\"permission\":\"buyram\"}],\"data\":\"10955e181be9d565504208d9c1754de38b0100000000000004454f5300000000\"},{\"account\":\"eosio.token\",\"name\":\"transfer\",\"authorization\":[{\"actor\":\"wharfkit1115\",\"permission\":\"test\"}],\"data\":\"504208d9c1754de390b1cad9c1754de3010000000000000004454f53000000003a77686172666b697420706c7567696e202d207265736f757263652070726f766964657220746573742028616c6c6f77466565733a207472756529\"}],\"transaction_extensions\":[]}],\"signatures\":[\"SIG_K1_K78XWp8dDNoYTVEuxnjZLRFFJcLboHJkdMLUimxLFf6ifQiT1BtpLVouShVTQgktbrxHUQsC37e72iCGYRFzRos9Yayjht\",\"SIG_K1_KasDdL7ZXWBA5oBJR7e2fcZ6TWoiSgPc9cotiEe7hz36SSeow9pz79yGjn5nTJDXEqgv2fzhUfu7BP7aksShHcxF6nmaEE\"],\"version\":null}}"
+}

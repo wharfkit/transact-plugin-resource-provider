@@ -1,0 +1,44 @@
+{
+    "request": {
+        "path": "https://jungle4.greymass.com/v1/chain/get_info",
+        "params": {
+            "method": "POST"
+        }
+    },
+    "headers": {
+        "access-control-allow-headers": "X-Requested-With,Accept,Content-Type,Origin",
+        "access-control-allow-methods": "GET, POST, OPTIONS",
+        "access-control-allow-origin": "*",
+        "connection": "close",
+        "content-length": "964",
+        "content-type": "application/json",
+        "date": "Wed, 21 Dec 2022 01:14:06 GMT",
+        "host": "jungle4.greymass.com",
+        "server": "nginx/1.18.0 (Ubuntu)",
+        "x-cached": "HIT"
+    },
+    "status": 200,
+    "json": {
+        "server_version": "9efc569a",
+        "chain_id": "73e4385a2708e6d7048834fbc1079f2fabb17b3c125b146af438971e90716c4d",
+        "head_block_num": 51746325,
+        "last_irreversible_block_num": 51746000,
+        "last_irreversible_block_id": "031594d0e0a9d48fbe5b796b991cc2a3fd8e86bdf8db21577f77bef6370eff30",
+        "head_block_id": "03159615fc2cc348bbfbb455c83b6c458b0a0c774f1f8b8ebf8c56953bd81715",
+        "head_block_time": "2022-12-21T01:14:06.000",
+        "head_block_producer": "batinthedark",
+        "virtual_block_cpu_limit": 200000000,
+        "virtual_block_net_limit": 1048576000,
+        "block_cpu_limit": 200000,
+        "block_net_limit": 1048576,
+        "server_version_string": "v3.2.0",
+        "fork_db_head_block_num": 51746325,
+        "fork_db_head_block_id": "03159615fc2cc348bbfbb455c83b6c458b0a0c774f1f8b8ebf8c56953bd81715",
+        "server_full_version_string": "v3.2.0-9efc569ae5eed75a6dd6c6ada67ef80eb3bbf366",
+        "total_cpu_weight": "120460593177659",
+        "total_net_weight": "117529135669359",
+        "earliest_available_block_num": 51558533,
+        "last_irreversible_block_time": "2022-12-21T01:11:23.500"
+    },
+    "text": "{\"server_version\":\"9efc569a\",\"chain_id\":\"73e4385a2708e6d7048834fbc1079f2fabb17b3c125b146af438971e90716c4d\",\"head_block_num\":51746325,\"last_irreversible_block_num\":51746000,\"last_irreversible_block_id\":\"031594d0e0a9d48fbe5b796b991cc2a3fd8e86bdf8db21577f77bef6370eff30\",\"head_block_id\":\"03159615fc2cc348bbfbb455c83b6c458b0a0c774f1f8b8ebf8c56953bd81715\",\"head_block_time\":\"2022-12-21T01:14:06.000\",\"head_block_producer\":\"batinthedark\",\"virtual_block_cpu_limit\":200000000,\"virtual_block_net_limit\":1048576000,\"block_cpu_limit\":200000,\"block_net_limit\":1048576,\"server_version_string\":\"v3.2.0\",\"fork_db_head_block_num\":51746325,\"fork_db_head_block_id\":\"03159615fc2cc348bbfbb455c83b6c458b0a0c774f1f8b8ebf8c56953bd81715\",\"server_full_version_string\":\"v3.2.0-9efc569ae5eed75a6dd6c6ada67ef80eb3bbf366\",\"total_cpu_weight\":\"120460593177659\",\"total_net_weight\":\"117529135669359\",\"earliest_available_block_num\":51558533,\"last_irreversible_block_time\":\"2022-12-21T01:11:23.500\"}"
+}

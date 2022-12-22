@@ -209,4 +209,97 @@ suite('resource provider', function () {
             assert.fail('No transaction was returned from transact call.')
         }
     })
+    test('rejects fee-based transaction based on limit (0.0001)', async function () {
+        this.timeout(6000000)
+        const session = new Session({
+            ...mockSessionOptions,
+            permissionLevel: 'wharfkit1115@test',
+            transactPlugins: [
+                new lib.ResourceProviderPlugin({
+                    allowFees: true,
+                    maxFee: '0.0001 EOS',
+                    url,
+                }),
+            ],
+        })
+        const action = {
+            authorization: [
+                {
+                    actor: 'wharfkit1115',
+                    permission: 'test',
+                },
+            ],
+            account: 'eosio.token',
+            name: 'transfer',
+            data: {
+                from: 'wharfkit1115',
+                to: 'wharfkittest',
+                quantity: '0.0001 EOS',
+                memo: 'wharfkit plugin - resource provider test (maxFee: 0.0001)',
+            },
+        }
+        const response = await session.transact(
+            {
+                action,
+            },
+            {broadcast: false}
+        )
+        if (response.resolved && response.transaction) {
+            // Ensure the original action is still identical to the original
+            assert.lengthOf(response.transaction?.actions, 1)
+            assert.isTrue(
+                Action.from({...action, data: Transfer.from(action.data)}).data.equals(
+                    response.resolved?.transaction.actions[0].data
+                )
+            )
+        } else {
+            assert.fail('No transaction was returned from transact call.')
+        }
+    })
+    test('accepts fee-based transaction based on limit (1.0000)', async function () {
+        this.timeout(6000000)
+        const session = new Session({
+            ...mockSessionOptions,
+            permissionLevel: 'wharfkit1115@test',
+            transactPlugins: [
+                new lib.ResourceProviderPlugin({
+                    maxFee: '0.0001 EOS',
+                    url,
+                }),
+            ],
+        })
+        const action = {
+            authorization: [
+                {
+                    actor: 'wharfkit1115',
+                    permission: 'test',
+                },
+            ],
+            account: 'eosio.token',
+            name: 'transfer',
+            data: {
+                from: 'wharfkit1115',
+                to: 'wharfkittest',
+                quantity: '0.0001 EOS',
+                memo: 'wharfkit plugin - resource provider test (maxFee: 0.0001)',
+            },
+        }
+        const response = await session.transact(
+            {
+                action,
+            },
+            {broadcast: false}
+        )
+        if (response.resolved && response.transaction) {
+            // Ensure the original action is still identical to the original
+            assert.lengthOf(response.transaction?.actions, 1)
+            assert.isTrue(
+                Action.from({...action, data: Transfer.from(action.data)}).data.equals(
+                    response.resolved?.transaction.actions[0].data
+                )
+            )
+        } else {
+            assert.fail('No transaction was returned from transact call.')
+        }
+    })
 })

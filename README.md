@@ -1,16 +1,21 @@
-PACKAGE
-=======
+# @wharfkit/resource-provider-plugin
 
-Greymass TypeScript library template, intended for libraries that work in any JavaScript context (node.js, Browser, React native), `@types/node` are installed only for tests, don't rely on any node.js types or imports inside `src/` (no `buffer`, `crypto` imports etc, they can be filled for browser but will bloat the bundle 100x)
+A `transactPlugin` for use with the `@wharfkit/session` library that provides resources to perform transactions.
+
+## Caveats
+
+-   Resource Provider API endpoint must conform to the Resource Provider API specification.
+-   To enable fees, the `allowFees` parameter must be specified and set to `true`.
+-   Any fees must be paid in the networks system token, deployed on the `eosio.token` account using the standard token contract.
 
 ## Installation
 
-The `PACKAGE` package is distributed as a module on [npm](https://www.npmjs.com/package/PACKAGE).
+The `@wharfkit/resource-provider-plugin` package is distributed as a module on [npm](https://www.npmjs.com/package/@wharfkit/resource-provider-plugin).
 
 ```
-yarn add PACKAGE
+yarn add @wharfkit/resource-provider-plugin
 # or
-npm install --save PACKAGE
+npm install --save @wharfkit/resource-provider-plugin
 ```
 
 ## Usage

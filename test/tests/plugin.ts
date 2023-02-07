@@ -5,18 +5,19 @@ import {
     Name,
     PrivateKey,
     Session,
+    SessionArgs,
     SessionOptions,
     Struct,
-    WalletPluginPrivateKey,
 } from '@wharfkit/session'
+import {WalletPluginPrivateKey} from '@wharfkit/wallet-plugin-privatekey'
 
-import * as lib from '$lib'
+import ResourceProviderPlugin from '$lib'
 import {mockFetch} from '../utils/mock-fetch'
 
 const url = 'https://jungle4.greymass.com/v1/resource_provider/request_transaction'
 // const url = 'http://localhost:8080/v1/resource_provider/request_transaction' // Use for local Resource Provider testing
 
-const mockResourceProviderPlugin = new lib.ResourceProviderPlugin({
+const mockResourceProviderPlugin = new ResourceProviderPlugin({
     url,
 })
 
@@ -24,15 +25,18 @@ const wallet = new WalletPluginPrivateKey({
     privateKey: PrivateKey.from('5Jtoxgny5tT7NiNFp1MLogviuPJ9NniWjnU4wKzaX4t7pL4kJ8s'),
 })
 
-const mockSessionOptions: SessionOptions = {
+const mockSessionArgs: SessionArgs = {
     chain: {
         id: '73e4385a2708e6d7048834fbc1079f2fabb17b3c125b146af438971e90716c4d',
         url: 'https://jungle4.greymass.com',
     },
-    fetch: mockFetch,
     permissionLevel: 'wharfkit1131@test',
-    transactPlugins: [mockResourceProviderPlugin],
     walletPlugin: wallet,
+}
+
+const mockSessionOptions: SessionOptions = {
+    fetch: mockFetch,
+    transactPlugins: [mockResourceProviderPlugin],
 }
 
 @Struct.type('transfer')
@@ -46,7 +50,7 @@ export class Transfer extends Struct {
 suite('resource provider', function () {
     test('provides free transaction for CPU and NET', async function () {
         this.slow(10000)
-        const session = new Session(mockSessionOptions)
+        const session = new Session(mockSessionArgs, mockSessionOptions)
         const action = {
             authorization: [
                 {
@@ -90,16 +94,21 @@ suite('resource provider', function () {
     })
     test('provides fee-based transaction for RAM purchase (allowFees: true)', async function () {
         this.timeout(6000000)
-        const session = new Session({
-            ...mockSessionOptions,
-            permissionLevel: 'wharfkit1115@test',
-            transactPlugins: [
-                new lib.ResourceProviderPlugin({
-                    allowFees: true,
-                    url,
-                }),
-            ],
-        })
+        const session = new Session(
+            {
+                ...mockSessionArgs,
+                permissionLevel: 'wharfkit1115@test',
+            },
+            {
+                ...mockSessionOptions,
+                transactPlugins: [
+                    new ResourceProviderPlugin({
+                        allowFees: true,
+                        url,
+                    }),
+                ],
+            }
+        )
         const action = {
             authorization: [
                 {
@@ -165,16 +174,21 @@ suite('resource provider', function () {
     })
     test('provides fee-based transaction for RAM purchase (allowFees: false)', async function () {
         this.timeout(6000000)
-        const session = new Session({
-            ...mockSessionOptions,
-            permissionLevel: 'wharfkit1115@test',
-            transactPlugins: [
-                new lib.ResourceProviderPlugin({
-                    allowFees: false,
-                    url,
-                }),
-            ],
-        })
+        const session = new Session(
+            {
+                ...mockSessionArgs,
+                permissionLevel: 'wharfkit1115@test',
+            },
+            {
+                ...mockSessionOptions,
+                transactPlugins: [
+                    new ResourceProviderPlugin({
+                        allowFees: false,
+                        url,
+                    }),
+                ],
+            }
+        )
         const action = {
             authorization: [
                 {
@@ -211,17 +225,22 @@ suite('resource provider', function () {
     })
     test('rejects fee-based transaction based on limit (0.0001)', async function () {
         this.timeout(6000000)
-        const session = new Session({
-            ...mockSessionOptions,
-            permissionLevel: 'wharfkit1115@test',
-            transactPlugins: [
-                new lib.ResourceProviderPlugin({
-                    allowFees: true,
-                    maxFee: '0.0001 EOS',
-                    url,
-                }),
-            ],
-        })
+        const session = new Session(
+            {
+                ...mockSessionArgs,
+                permissionLevel: 'wharfkit1115@test',
+            },
+            {
+                ...mockSessionOptions,
+                transactPlugins: [
+                    new ResourceProviderPlugin({
+                        allowFees: true,
+                        maxFee: '0.0001 EOS',
+                        url,
+                    }),
+                ],
+            }
+        )
         const action = {
             authorization: [
                 {
@@ -258,16 +277,21 @@ suite('resource provider', function () {
     })
     test('accepts fee-based transaction based on limit (1.0000)', async function () {
         this.timeout(6000000)
-        const session = new Session({
-            ...mockSessionOptions,
-            permissionLevel: 'wharfkit1115@test',
-            transactPlugins: [
-                new lib.ResourceProviderPlugin({
-                    maxFee: '0.0001 EOS',
-                    url,
-                }),
-            ],
-        })
+        const session = new Session(
+            {
+                ...mockSessionArgs,
+                permissionLevel: 'wharfkit1115@test',
+            },
+            {
+                ...mockSessionOptions,
+                transactPlugins: [
+                    new ResourceProviderPlugin({
+                        maxFee: '0.0001 EOS',
+                        url,
+                    }),
+                ],
+            }
+        )
         const action = {
             authorization: [
                 {

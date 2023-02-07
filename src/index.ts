@@ -1,6 +1,4 @@
 import {
-    ABIDef,
-    AbiProvider,
     AbstractTransactPlugin,
     Action,
     Asset,
@@ -16,7 +14,6 @@ import {
     Transaction,
 } from '@wharfkit/session'
 
-import zlib from 'pako'
 import {getNewActions, hasOriginalActions} from './utils'
 
 interface ResourceProviderOptions {
@@ -51,7 +48,7 @@ export class Transfer extends Struct {
     @Struct.field('string') memo!: string
 }
 
-export class ResourceProviderPlugin extends AbstractTransactPlugin {
+export default class ResourceProviderPlugin extends AbstractTransactPlugin {
     readonly allowFees: boolean = false
     // readonly allowActions: Name[] = [
     //     Name.from('eosio.token:transfer'),
@@ -60,19 +57,19 @@ export class ResourceProviderPlugin extends AbstractTransactPlugin {
     readonly maxFee?: Asset
     readonly url?: string
 
-    constructor(options: ResourceProviderOptions) {
+    constructor(options?: ResourceProviderOptions) {
         super()
-        if (typeof options.allowFees !== 'undefined') {
+        if (typeof options?.allowFees !== 'undefined') {
             this.allowFees = options.allowFees
         }
         // TODO: Allow contact/action combos to be passed in and checked against to ensure no rogue actions were appended.
         // if (typeof options.allowActions !== 'undefined') {
         //     this.allowActions = options.allowActions.map((action) => Name.from(action))
         // }
-        if (typeof options.maxFee !== 'undefined') {
+        if (typeof options?.maxFee !== 'undefined') {
             this.maxFee = Asset.from(options.maxFee)
         }
-        if (options.url) {
+        if (options?.url) {
             this.url = options.url
         }
     }
@@ -96,7 +93,7 @@ export class ResourceProviderPlugin extends AbstractTransactPlugin {
             body: JSON.stringify({
                 ref: 'unittest',
                 request,
-                signer: context.session,
+                signer: context.permissionLevel,
             }),
         })
         const json: ResourceProviderResponse = await response.json()
@@ -219,25 +216,10 @@ export class ResourceProviderPlugin extends AbstractTransactPlugin {
         response: ResourceProviderResponse,
         context: TransactContext
     ): Promise<SigningRequest> {
-        // Establish an AbiProvider based on the session context.
-        const abiProvider: AbiProvider = {
-            getAbi: async (account: Name): Promise<ABIDef> => {
-                const response = await context.client.v1.chain.get_abi(account)
-                if (!response.abi) {
-                    /* istanbul ignore next */
-                    throw new Error('could not load abi') // TODO: Better coverage for this
-                }
-                return response.abi
-            },
-        }
-
         // Create a new signing request based on the response to return to the session's transact flow.
         const request = await SigningRequest.create(
             {transaction: response.data.request[1]},
-            {
-                abiProvider,
-                zlib,
-            }
+            context.esrOptions
         )
 
         // Set the required fee onto the request itself for wallets to process.
@@ -261,7 +243,7 @@ export class ResourceProviderPlugin extends AbstractTransactPlugin {
         // Retrieve first authorizer and ensure it matches session context.
         const firstAction = request.getRawActions()[0]
         const firstAuthorizer = firstAction.authorization[0]
-        if (!firstAuthorizer.actor.equals(context.session.actor)) {
+        if (!firstAuthorizer.actor.equals(context.permissionLevel.actor)) {
             throw new Error('The first authorizer of the transaction does not match this session.')
         }
     }

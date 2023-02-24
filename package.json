@@ -1,13 +1,13 @@
 {
-    "name": "@wharfkit/resource-provider-plugin",
+    "name": "@wharfkit/transact-plugin-resource-provider",
     "description": "Plugin to automatically provide network resources for transactions using the Resource Provider implementation standard.",
     "version": "0.2.0",
-    "homepage": "https://github.com/wharfkit/resource-provider-plugin",
+    "homepage": "https://github.com/wharfkit/transact-plugin-resource-provider",
     "license": "BSD-3-Clause",
-    "main": "lib/resource-provider-plugin.js",
-    "module": "lib/resource-provider-plugin.m.js",
-    "browser": "lib/resource-provider-plugin.umd.js",
-    "types": "lib/resource-provider-plugin.d.ts",
+    "main": "lib/transact-plugin-resource-provider.js",
+    "module": "lib/transact-plugin-resource-provider.m.js",
+    "browser": "lib/transact-plugin-resource-provider.umd.js",
+    "types": "lib/transact-plugin-resource-provider.d.ts",
     "sideEffects": false,
     "files": [
         "lib/*",
@@ -17,7 +17,7 @@
         "prepare": "make"
     },
     "peerDependencies": {
-        "@wharfkit/session": "^0.3.0-ui-6"
+        "@wharfkit/session": "^0.3.0-ui-13"
     },
     "devDependencies": {
         "@babel/core": "^7.20.12",
@@ -35,8 +35,8 @@
         "@types/node": "^18.7.18",
         "@typescript-eslint/eslint-plugin": "^5.20.0",
         "@typescript-eslint/parser": "^5.20.0",
-        "@wharfkit/session": "^0.3.0-ui-6",
-        "@wharfkit/wallet-plugin-privatekey": "^0.2.0",
+        "@wharfkit/session": "^0.3.0-ui-13",
+        "@wharfkit/wallet-plugin-privatekey": "^0.3.0-ui-13.1",
         "chai": "^4.3.4",
         "eslint": "^8.13.0",
         "eslint-config-prettier": "^8.1.0",
@@ -54,6 +54,7 @@
         "tslib": "^2.1.0",
         "typedoc": "^0.23.14",
         "typedoc-plugin-mermaid": "^1.9.0",
-        "typescript": "^4.1.2"
+        "typescript": "^4.1.2",
+        "yarn-deduplicate": "^6.0.1"
     }
 }

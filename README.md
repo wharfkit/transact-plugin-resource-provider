@@ -20,7 +20,27 @@ npm install --save @wharfkit/transact-plugin-resource-provider
 
 ## Usage
 
-TODO
+Include when configuring the Session Kit:
+
+```ts
+import {TransactPluginResourceProvider} from '@wharfkit/transact-plugin-resource-provider'
+
+const kit = new SessionKit({
+    // ... your other options
+    transactPlugins: [new TransactPluginResourceProvider()],
+})
+```
+
+Or when you are manually configuring a Session:
+
+```ts
+import {TransactPluginResourceProvider} from '@wharfkit/transact-plugin-resource-provider'
+
+const session = new Session({
+    // ... your other options
+    transactPlugins: [new TransactPluginResourceProvider()],
+})
+```
 
 ## Developing
 

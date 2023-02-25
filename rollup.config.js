@@ -16,7 +16,7 @@ const banner = `
  */
 `.trim()
 
-const external = Object.keys(pkg.peerDependencies)
+const external = Object.keys(pkg.dependencies)
 
 /** @type {import('rollup').RollupOptions} */
 export default [
@@ -46,6 +46,7 @@ export default [
     {
         input: 'src/index.ts',
         output: {banner, file: pkg.types, format: 'esm'},
+
         plugins: [dts()],
     },
 ]

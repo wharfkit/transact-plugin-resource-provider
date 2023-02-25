@@ -6,7 +6,6 @@
     "license": "BSD-3-Clause",
     "main": "lib/transact-plugin-resource-provider.js",
     "module": "lib/transact-plugin-resource-provider.m.js",
-    "browser": "lib/transact-plugin-resource-provider.umd.js",
     "types": "lib/transact-plugin-resource-provider.d.ts",
     "sideEffects": false,
     "files": [
@@ -15,6 +14,9 @@
     ],
     "scripts": {
         "prepare": "make"
+    },
+    "dependencies": {
+        "tslib": "^2.1.0"
     },
     "peerDependencies": {
         "@wharfkit/session": "^0.3.0-ui-13"

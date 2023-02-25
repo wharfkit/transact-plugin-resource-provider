@@ -1,11 +1,13 @@
 import {
-    ABIDef,
-    AbiProvider,
     AbstractTransactPlugin,
     Action,
     Asset,
     AssetType,
+    Cancelable,
+    Canceled,
+    ChainDefinition,
     Name,
+    PromptResponse,
     Serializer,
     Signature,
     SigningRequest,
@@ -16,14 +18,13 @@ import {
     Transaction,
 } from '@wharfkit/session'
 
-import zlib from 'pako'
 import {getNewActions, hasOriginalActions} from './utils'
 
 interface ResourceProviderOptions {
     allowFees?: boolean
     // allowActions?: NameType[]
+    endpoints?: Record<string, string>
     maxFee?: AssetType
-    url?: string
 }
 
 interface ResourceProviderResponseData {
@@ -50,37 +51,63 @@ export class Transfer extends Struct {
     @Struct.field(Asset) quantity!: Asset
     @Struct.field('string') memo!: string
 }
+export const defaultOptions = {
+    endpoints: {
+        aca376f206b8fc25a6ed44dbdc66547c36c6c33e3a119ffbeaef943642f0e906:
+            'https://eos.greymass.com',
+        '73e4385a2708e6d7048834fbc1079f2fabb17b3c125b146af438971e90716c4d':
+            'https://jungle4.greymass.com',
+        '4667b205c6838ef70ff7988f6e8257e8be0e1284a2f59699054a018f743b1d11':
+            'https://telos.greymass.com',
+        '1064487b3cd1a897ce03ae5b6a865651747e2e152090f99c1d19d44e01aea5a4':
+            'https://wax.greymass.com',
+    },
+}
 
-export class ResourceProviderPlugin extends AbstractTransactPlugin {
-    readonly allowFees: boolean = false
+export class TransactPluginResourceProvider extends AbstractTransactPlugin {
+    readonly allowFees: boolean = true
     // readonly allowActions: Name[] = [
     //     Name.from('eosio.token:transfer'),
     //     Name.from('eosio:buyrambytes'),
     // ]
     readonly maxFee?: Asset
-    readonly url?: string
 
-    constructor(options: ResourceProviderOptions) {
+    readonly endpoints: Record<string, string> = defaultOptions.endpoints
+
+    constructor(options?: ResourceProviderOptions) {
         super()
-        if (typeof options.allowFees !== 'undefined') {
-            this.allowFees = options.allowFees
-        }
-        // TODO: Allow contact/action combos to be passed in and checked against to ensure no rogue actions were appended.
-        // if (typeof options.allowActions !== 'undefined') {
-        //     this.allowActions = options.allowActions.map((action) => Name.from(action))
-        // }
-        if (typeof options.maxFee !== 'undefined') {
-            this.maxFee = Asset.from(options.maxFee)
-        }
-        if (options.url) {
-            this.url = options.url
+        if (options) {
+            // Set the endpoints and chains available
+            if (options.endpoints) {
+                this.endpoints = options.endpoints
+            }
+            if (typeof options.allowFees !== 'undefined') {
+                this.allowFees = options.allowFees
+            }
+            if (typeof options.maxFee !== 'undefined') {
+                this.maxFee = Asset.from(options.maxFee)
+            }
+            // TODO: Allow contact/action combos to be passed in and checked against to ensure no rogue actions were appended.
+            // if (typeof options.allowActions !== 'undefined') {
+            //     this.allowActions = options.allowActions.map((action) => Name.from(action))
+            // }
         }
     }
 
     register(context: TransactContext): void {
-        context.addHook(TransactHookTypes.beforeSign, (request, context) =>
-            this.request(request, context)
+        context.addHook(
+            TransactHookTypes.beforeSign,
+            async (
+                request: SigningRequest,
+                context: TransactContext
+            ): Promise<TransactHookResponse> => {
+                return this.request(request, context)
+            }
         )
+    }
+
+    getEndpoint(chain: ChainDefinition): string {
+        return this.endpoints[String(chain.id)]
     }
 
     async request(
@@ -90,13 +117,26 @@ export class ResourceProviderPlugin extends AbstractTransactPlugin {
         // Validate that this request is valid for the resource provider
         this.validateRequest(request, context)
 
+        // Determine appropriate URL for this request
+        const endpoint = this.getEndpoint(context.chain)
+
+        // If no endpoint was found, gracefully fail and return the original request.
+        if (!endpoint) {
+            return {
+                request,
+            }
+        }
+
+        // Assemble the request to the resource provider.
+        const url = `${endpoint}/v1/resource_provider/request_transaction`
+
         // Perform the request to the resource provider.
-        const response = await context.fetch(this.url, {
+        const response = await context.fetch(url, {
             method: 'POST',
             body: JSON.stringify({
                 ref: 'unittest',
                 request,
-                signer: context.session,
+                signer: context.permissionLevel,
             }),
         })
         const json: ResourceProviderResponse = await response.json()
@@ -112,8 +152,12 @@ export class ResourceProviderPlugin extends AbstractTransactPlugin {
         if (requiresPayment) {
             // If the resource provider offered transaction with a fee, but plugin doesn't allow fees, return the original transaction.
             if (!this.allowFees) {
-                // TODO: Notify the script somehow of this, maybe we need an optional logger?
                 // Notify that a fee was required but not allowed via allowFees: false.
+                if (context.ui) {
+                    context.ui.status(
+                        'Resource provider rejected transaction, fee required to proceed and the application disallowed fees.'
+                    )
+                }
                 return {
                     request,
                 }
@@ -129,8 +173,10 @@ export class ResourceProviderPlugin extends AbstractTransactPlugin {
         )
 
         if (!originalActionsIntact) {
-            // TODO: Notify the script somehow of this, maybe we need an optional logger?
             // Notify that the original actions requested were modified somehow, and reject the modification.
+            if (context.ui) {
+                context.ui.status('Resource provider rejected transaction, it was modified.')
+            }
             return {
                 request,
             }
@@ -162,8 +208,12 @@ export class ResourceProviderPlugin extends AbstractTransactPlugin {
         // If the resource provider offered transaction with a fee, but the fee was higher than allowed, return the original transaction.
         if (this.maxFee) {
             if (addedFees.units > this.maxFee.units) {
-                // TODO: Notify the script somehow of this, maybe we need an optional logger?
                 // Notify that a fee was required but higher than allowed via maxFee.
+                if (context.ui) {
+                    context.ui.status(
+                        'Resource provider rejected transaction, the fee amount was an unusually high amount.'
+                    )
+                }
                 return {
                     request,
                 }
@@ -173,34 +223,64 @@ export class ResourceProviderPlugin extends AbstractTransactPlugin {
         // Validate that the response is valid for the session.
         await this.validateResponseData(json)
 
-        // NYI: Interact with interface via context for fee based prompting
-
-        /* Psuedo-code for fee based prompting
-
-        if (response.status === 402) {
-
-            // Prompt for the fee acceptance
-            const promptResponse = context.userPrompt({
-                title: 'Transaction Fee Required',
-                message: `This transaction requires a fee of ${response.json.data.fee} EOS. Do you wish to accept this fee?`,
-            })
-
-            // If the user did not accept the fee, return the original request without modification.
-            if (!promptResponse) {
-                return {
-                    request,
-                }
-            }
-        } */
-
         // Create a new signing request based on the response to return to the session's transact flow.
         const modified = await this.createRequest(json, context)
 
-        // Return the modified transaction and additional signatures
-        return {
-            request: modified,
-            signatures: json.data.signatures.map((sig) => Signature.from(sig)),
+        if (context.ui) {
+            // Initiate a new cancelable prompt to inform the user of the fee required
+            const prompt: Cancelable<PromptResponse> = context.ui.prompt({
+                title: 'Fee Required',
+                body: 'Resources are required to complete this transaction. Accept fee?',
+                elements: [
+                    {
+                        type: 'asset',
+                        data: {
+                            label: 'Fee required',
+                            value: addedFees,
+                        },
+                    },
+                    {
+                        type: 'accept',
+                    },
+                ],
+            })
+
+            // TODO: Set the timer to match the expiration of the transaction
+            const timer = setTimeout(() => {
+                prompt.cancel('canceled automatically through timeout')
+            }, 120000)
+
+            // Return the promise from the prompt
+            return prompt
+                .then(async () => {
+                    // Return the modified transaction and additional signatures
+                    return new Promise((r) =>
+                        r({
+                            request: modified,
+                            signatures: json.data.signatures.map((sig) => Signature.from(sig)),
+                        })
+                    ) as Promise<TransactHookResponse>
+                })
+                .catch((e) => {
+                    // Throw if what we caught was a cancelation
+                    if (e instanceof Canceled) {
+                        throw e
+                    }
+                    // Otherwise if it wasn't a cancel, it was a reject, and continue without modification
+                    return new Promise((r) => r({request})) as Promise<TransactHookResponse>
+                })
+                .finally(() => {
+                    clearTimeout(timer) // TODO: Remove this, it's just here for testing
+                })
         }
+
+        // Return the modified transaction and additional signatures
+        return new Promise((r) =>
+            r({
+                request: modified,
+                signatures: json.data.signatures.map((sig) => Signature.from(sig)),
+            })
+        )
     }
 
     getModifiedTransaction(json): Transaction {
@@ -219,25 +299,10 @@ export class ResourceProviderPlugin extends AbstractTransactPlugin {
         response: ResourceProviderResponse,
         context: TransactContext
     ): Promise<SigningRequest> {
-        // Establish an AbiProvider based on the session context.
-        const abiProvider: AbiProvider = {
-            getAbi: async (account: Name): Promise<ABIDef> => {
-                const response = await context.client.v1.chain.get_abi(account)
-                if (!response.abi) {
-                    /* istanbul ignore next */
-                    throw new Error('could not load abi') // TODO: Better coverage for this
-                }
-                return response.abi
-            },
-        }
-
         // Create a new signing request based on the response to return to the session's transact flow.
         const request = await SigningRequest.create(
             {transaction: response.data.request[1]},
-            {
-                abiProvider,
-                zlib,
-            }
+            context.esrOptions
         )
 
         // Set the required fee onto the request itself for wallets to process.
@@ -261,7 +326,7 @@ export class ResourceProviderPlugin extends AbstractTransactPlugin {
         // Retrieve first authorizer and ensure it matches session context.
         const firstAction = request.getRawActions()[0]
         const firstAuthorizer = firstAction.authorization[0]
-        if (!firstAuthorizer.actor.equals(context.session.actor)) {
+        if (!firstAuthorizer.actor.equals(context.permissionLevel.actor)) {
             throw new Error('The first authorizer of the transaction does not match this session.')
         }
     }

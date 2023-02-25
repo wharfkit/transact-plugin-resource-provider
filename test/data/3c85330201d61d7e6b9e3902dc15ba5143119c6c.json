@@ -1,0 +1,42 @@
+{
+    "request": {
+        "path": "https://libre.greymass.com/v1/chain/get_info",
+        "params": {
+            "method": "POST"
+        }
+    },
+    "headers": {
+        "access-control-allow-headers": "X-Requested-With,Accept,Content-Type,Origin",
+        "access-control-allow-methods": "GET, POST, OPTIONS",
+        "access-control-allow-origin": "*",
+        "connection": "close",
+        "content-length": "846",
+        "content-type": "application/json",
+        "date": "Fri, 24 Feb 2023 22:51:01 GMT",
+        "host": "libre.greymass.com",
+        "server": "nginx",
+        "x-cached": "EXPIRED"
+    },
+    "status": 200,
+    "json": {
+        "server_version": "cd73bec0",
+        "chain_id": "38b1d7815474d0c60683ecbea321d723e83f5da6ae5f1c1f9fecc69d9ba96465",
+        "head_block_num": 40582413,
+        "last_irreversible_block_num": 40582084,
+        "last_irreversible_block_id": "026b3bc48dc9e1d11f728e3bb93957a28997c266731545a8aa7ab5a7aaebc8eb",
+        "head_block_id": "026b3d0dc55be0faf4fafd5322ddf13c4041f13aec38c5d2172ecf6fe91fcd64",
+        "head_block_time": "2023-02-24T22:51:02.000",
+        "head_block_producer": "cryptolions",
+        "virtual_block_cpu_limit": 100000000,
+        "virtual_block_net_limit": 1048576000,
+        "block_cpu_limit": 100000,
+        "block_net_limit": 1048576,
+        "server_version_string": "v2.0.14",
+        "fork_db_head_block_num": 40582413,
+        "fork_db_head_block_id": "026b3d0dc55be0faf4fafd5322ddf13c4041f13aec38c5d2172ecf6fe91fcd64",
+        "server_full_version_string": "v2.0.14-cd73bec099baab862ee03e6c0f38e1ce70d243ce",
+        "total_cpu_weight": 274743,
+        "total_net_weight": 274743
+    },
+    "text": "{\"server_version\":\"cd73bec0\",\"chain_id\":\"38b1d7815474d0c60683ecbea321d723e83f5da6ae5f1c1f9fecc69d9ba96465\",\"head_block_num\":40582413,\"last_irreversible_block_num\":40582084,\"last_irreversible_block_id\":\"026b3bc48dc9e1d11f728e3bb93957a28997c266731545a8aa7ab5a7aaebc8eb\",\"head_block_id\":\"026b3d0dc55be0faf4fafd5322ddf13c4041f13aec38c5d2172ecf6fe91fcd64\",\"head_block_time\":\"2023-02-24T22:51:02.000\",\"head_block_producer\":\"cryptolions\",\"virtual_block_cpu_limit\":100000000,\"virtual_block_net_limit\":1048576000,\"block_cpu_limit\":100000,\"block_net_limit\":1048576,\"server_version_string\":\"v2.0.14\",\"fork_db_head_block_num\":40582413,\"fork_db_head_block_id\":\"026b3d0dc55be0faf4fafd5322ddf13c4041f13aec38c5d2172ecf6fe91fcd64\",\"server_full_version_string\":\"v2.0.14-cd73bec099baab862ee03e6c0f38e1ce70d243ce\",\"total_cpu_weight\":274743,\"total_net_weight\":274743}"
+}

@@ -1,4 +1,4 @@
-# @wharfkit/resource-provider-plugin
+# @wharfkit/transact-plugin-resource-provider
 
 A `transactPlugin` for use with the `@wharfkit/session` library that provides resources to perform transactions.
 
@@ -10,17 +10,37 @@ A `transactPlugin` for use with the `@wharfkit/session` library that provides re
 
 ## Installation
 
-The `@wharfkit/resource-provider-plugin` package is distributed as a module on [npm](https://www.npmjs.com/package/@wharfkit/resource-provider-plugin).
+The `@wharfkit/transact-plugin-resource-provider` package is distributed as a module on [npm](https://www.npmjs.com/package/@wharfkit/transact-plugin-resource-provider).
 
 ```
-yarn add @wharfkit/resource-provider-plugin
+yarn add @wharfkit/transact-plugin-resource-provider
 # or
-npm install --save @wharfkit/resource-provider-plugin
+npm install --save @wharfkit/transact-plugin-resource-provider
 ```
 
 ## Usage
 
-TODO
+Include when configuring the Session Kit:
+
+```ts
+import {TransactPluginResourceProvider} from '@wharfkit/transact-plugin-resource-provider'
+
+const kit = new SessionKit({
+    // ... your other options
+    transactPlugins: [new TransactPluginResourceProvider()],
+})
+```
+
+Or when you are manually configuring a Session:
+
+```ts
+import {TransactPluginResourceProvider} from '@wharfkit/transact-plugin-resource-provider'
+
+const session = new Session({
+    // ... your other options
+    transactPlugins: [new TransactPluginResourceProvider()],
+})
+```
 
 ## Developing
 

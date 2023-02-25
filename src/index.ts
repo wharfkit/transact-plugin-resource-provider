@@ -226,7 +226,7 @@ export class TransactPluginResourceProvider extends AbstractTransactPlugin {
         // Create a new signing request based on the response to return to the session's transact flow.
         const modified = await this.createRequest(json, context)
 
-        if (context.ui) {
+        if (context.ui && addedFees.value > 0) {
             // Initiate a new cancelable prompt to inform the user of the fee required
             const prompt: Cancelable<PromptResponse> = context.ui.prompt({
                 title: 'Fee Required',

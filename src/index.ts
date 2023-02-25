@@ -300,10 +300,7 @@ export class TransactPluginResourceProvider extends AbstractTransactPlugin {
         context: TransactContext
     ): Promise<SigningRequest> {
         // Create a new signing request based on the response to return to the session's transact flow.
-        const request = await SigningRequest.create(
-            {transaction: response.data.request[1]},
-            context.esrOptions
-        )
+        const request = await context.createRequest(response.data.request[1], context.abiProvider)
 
         // Set the required fee onto the request itself for wallets to process.
         if (response.code === 402 && response.data.fee) {

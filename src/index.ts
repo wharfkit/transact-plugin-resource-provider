@@ -18,6 +18,7 @@ import {
     Transaction,
 } from '@wharfkit/session'
 
+import defaultTranslations from './translations.json'
 import {getNewActions, hasOriginalActions} from './utils'
 
 interface ResourceProviderOptions {
@@ -51,6 +52,7 @@ export class Transfer extends Struct {
     @Struct.field(Asset) quantity!: Asset
     @Struct.field('string') memo!: string
 }
+
 export const defaultOptions = {
     endpoints: {
         aca376f206b8fc25a6ed44dbdc66547c36c6c33e3a119ffbeaef943642f0e906:
@@ -65,6 +67,8 @@ export const defaultOptions = {
 }
 
 export class TransactPluginResourceProvider extends AbstractTransactPlugin {
+    id = 'transact-plugin-resource-provider'
+    translations = defaultTranslations
     readonly allowFees: boolean = true
     // readonly allowActions: Name[] = [
     //     Name.from('eosio.token:transfer'),
@@ -114,6 +118,13 @@ export class TransactPluginResourceProvider extends AbstractTransactPlugin {
         request: SigningRequest,
         context: TransactContext
     ): Promise<TransactHookResponse> {
+        // Mock the translation function if no UI is available
+        let t = (key: string, options: {default: string; [key: string]: unknown}) => options.default
+        if (context.ui) {
+            // Use the translate function if available
+            t = context.ui.getTranslate(this.id)
+        }
+
         // Validate that this request is valid for the resource provider
         this.validateRequest(request, context)
 
@@ -155,7 +166,12 @@ export class TransactPluginResourceProvider extends AbstractTransactPlugin {
                 // Notify that a fee was required but not allowed via allowFees: false.
                 if (context.ui) {
                     context.ui.status(
-                        'Resource provider rejected transaction, fee required to proceed and the application disallowed fees.'
+                        `${t('rejected.no-fees', {
+                            default:
+                                'A resource provider offered to cover this transaction for a fee, but fee-based transactions are disabled by the configuration using `allowFees = false`.',
+                        })} ${t('will-continue', {
+                            default: 'The transaction will continue without the resource provider.',
+                        })}`
                     )
                 }
                 return {
@@ -175,7 +191,14 @@ export class TransactPluginResourceProvider extends AbstractTransactPlugin {
         if (!originalActionsIntact) {
             // Notify that the original actions requested were modified somehow, and reject the modification.
             if (context.ui) {
-                context.ui.status('Resource provider rejected transaction, it was modified.')
+                context.ui.status(
+                    `${t('rejected.original-modified', {
+                        default:
+                            'The original transaction returned by the resource provider has been modified too much. Continuing without the resource provider',
+                    })} ${t('will-continue', {
+                        default: 'The transaction will continue without the resource provider.',
+                    })}`
+                )
             }
             return {
                 request,
@@ -211,7 +234,12 @@ export class TransactPluginResourceProvider extends AbstractTransactPlugin {
                 // Notify that a fee was required but higher than allowed via maxFee.
                 if (context.ui) {
                     context.ui.status(
-                        'Resource provider rejected transaction, the fee amount was an unusually high amount.'
+                        `${t('rejected.max-fee', {
+                            default:
+                                'The fee requested by the resource provider is unusually high and has been rejected.',
+                        })} ${t('will-continue', {
+                            default: 'The transaction will continue without the resource provider.',
+                        })}`
                     )
                 }
                 return {
@@ -227,15 +255,32 @@ export class TransactPluginResourceProvider extends AbstractTransactPlugin {
         const modified = await this.createRequest(json, context)
 
         if (context.ui && addedFees.value > 0) {
+            // Determine which resources are being covered by this fee
+            const resourceTypes: string[] = []
+            if (json.data.costs) {
+                const {cpu, net, ram} = json.data.costs
+                if (Asset.from(cpu).value > 0) resourceTypes.push('CPU')
+                if (Asset.from(net).value > 0) resourceTypes.push('NET')
+                if (Asset.from(ram).value > 0) resourceTypes.push('RAM')
+            } else {
+                resourceTypes.push('Unknown')
+            }
             // Initiate a new cancelable prompt to inform the user of the fee required
             const prompt: Cancelable<PromptResponse> = context.ui.prompt({
-                title: 'Fee Required',
-                body: 'Resources are required to complete this transaction. Accept fee?',
+                title: t('fee.title', {default: 'Accept Transaction Fee?'}),
+                body: t('fee.body', {
+                    default:
+                        'Additional resources ({{resource}}) are required for your account to perform this transaction. Would you like to automatically purchase these resources and proceed?',
+                    resource: String(resourceTypes.join('/')),
+                }),
                 elements: [
                     {
                         type: 'asset',
                         data: {
-                            label: 'Fee required',
+                            label: t('fee.cost', {
+                                default: 'Cost of {{resource}}',
+                                resource: String(resourceTypes.join('/')),
+                            }),
                             value: addedFees,
                         },
                     },
@@ -247,7 +292,9 @@ export class TransactPluginResourceProvider extends AbstractTransactPlugin {
 
             // TODO: Set the timer to match the expiration of the transaction
             const timer = setTimeout(() => {
-                prompt.cancel('canceled automatically through timeout')
+                prompt.cancel(
+                    t('timeout', {default: 'The offer from the resource provider has expired.'})
+                )
             }, 120000)
 
             // Return the promise from the prompt

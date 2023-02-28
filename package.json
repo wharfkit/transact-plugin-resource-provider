@@ -1,7 +1,7 @@
 {
     "name": "@wharfkit/transact-plugin-resource-provider",
     "description": "Plugin to automatically provide network resources for transactions using the Resource Provider implementation standard.",
-    "version": "0.3.0-ui-14",
+    "version": "0.3.0-ui-16",
     "homepage": "https://github.com/wharfkit/transact-plugin-resource-provider",
     "license": "BSD-3-Clause",
     "main": "lib/transact-plugin-resource-provider.js",

@@ -1,0 +1,14 @@
+{
+    "timeout": "The offer from the resource provider has expired.",
+    "will-continue": "The transaction will continue without the resource provider.",
+    "fee": {
+        "title": "Accept Transaction Fee?",
+        "body": "Additional resources ({{resource}}) are required for your account to perform this transaction. Would you like to automatically purchase these resources and proceed?",
+        "cost": "Cost of {{resource}}"
+    },
+    "rejected": {
+        "no-fees": "A resource provider offered to cover this transaction for a fee, but fee-based transactions are disabled by the configuration using `allowFees = false`.",
+        "original-modified": "The original transaction returned by the resource provider has been modified too much. Continuing without the resource provider",
+        "max-fee": "The fee requested by the resource provider is unusually high and has been rejected."
+    }
+}

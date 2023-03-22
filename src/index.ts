@@ -18,7 +18,7 @@ import {
     Transaction,
 } from '@wharfkit/session'
 
-import defaultTranslations from './translations.json'
+import defaultTranslations from './translations'
 import {getNewActions, hasOriginalActions} from './utils'
 
 interface ResourceProviderOptions {

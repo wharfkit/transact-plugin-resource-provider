@@ -125,9 +125,6 @@ export class TransactPluginResourceProvider extends AbstractTransactPlugin {
             t = context.ui.getTranslate(this.id)
         }
 
-        // Validate that this request is valid for the resource provider
-        this.validateRequest(request, context)
-
         // Determine appropriate URL for this request
         const endpoint = this.getEndpoint(context.chain)
 
@@ -137,6 +134,9 @@ export class TransactPluginResourceProvider extends AbstractTransactPlugin {
                 request,
             }
         }
+
+        // Validate that this request is valid for the resource provider
+        this.validateRequest(request, context)
 
         // Assemble the request to the resource provider.
         const url = `${endpoint}/v1/resource_provider/request_transaction`

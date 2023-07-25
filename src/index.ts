@@ -135,8 +135,29 @@ export class TransactPluginResourceProvider extends AbstractTransactPlugin {
             }
         }
 
+        // Resolve the request as a transaction for placeholders + tapos
+        let modifiedRequest
+        const abis = await request.fetchAbis(context.abiCache)
+        if (request.requiresTapos()) {
+            const info = await context.client.v1.chain.get_info()
+            const header = info.getTransactionHeader(120)
+            modifiedRequest = await SigningRequest.create(
+                {
+                    transaction: request.resolveTransaction(abis, context.permissionLevel, header),
+                },
+                context.esrOptions
+            )
+        } else {
+            modifiedRequest = await SigningRequest.create(
+                {
+                    transaction: request.resolveTransaction(abis, context.permissionLevel),
+                },
+                context.esrOptions
+            )
+        }
+
         // Validate that this request is valid for the resource provider
-        this.validateRequest(request, context)
+        this.validateRequest(modifiedRequest, context)
 
         // Assemble the request to the resource provider.
         const url = `${endpoint}/v1/resource_provider/request_transaction`
@@ -146,7 +167,7 @@ export class TransactPluginResourceProvider extends AbstractTransactPlugin {
             method: 'POST',
             body: JSON.stringify({
                 ref: 'unittest',
-                request,
+                request: modifiedRequest,
                 signer: context.permissionLevel,
             }),
         })
@@ -184,7 +205,7 @@ export class TransactPluginResourceProvider extends AbstractTransactPlugin {
         const modifiedTransaction = this.getModifiedTransaction(json)
         // Ensure the new transaction has an unmodified version of the original action(s)
         const originalActionsIntact = hasOriginalActions(
-            request.getRawTransaction(),
+            modifiedRequest.getRawTransaction(),
             modifiedTransaction
         )
 
@@ -206,7 +227,7 @@ export class TransactPluginResourceProvider extends AbstractTransactPlugin {
         }
 
         // Retrieve all newly appended actions from the modified transaction
-        const addedActions = getNewActions(request.getRawTransaction(), modifiedTransaction)
+        const addedActions = getNewActions(modifiedRequest.getRawTransaction(), modifiedTransaction)
 
         // TODO: Check that all the addedActions are allowed via this.allowActions
 
@@ -314,7 +335,9 @@ export class TransactPluginResourceProvider extends AbstractTransactPlugin {
                         throw e
                     }
                     // Otherwise if it wasn't a cancel, it was a reject, and continue without modification
-                    return new Promise((r) => r({request})) as Promise<TransactHookResponse>
+                    return new Promise((r) =>
+                        r({request: modifiedRequest})
+                    ) as Promise<TransactHookResponse>
                 })
                 .finally(() => {
                     clearTimeout(timer) // TODO: Remove this, it's just here for testing

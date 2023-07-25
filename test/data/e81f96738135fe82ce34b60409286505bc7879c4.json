@@ -6,17 +6,6 @@
             "body": "{\"account_name\":\"greymassnoop\"}"
         }
     },
-    "headers": {
-        "access-control-allow-headers": "X-Requested-With,Accept,Content-Type,Origin",
-        "access-control-allow-methods": "GET, POST, OPTIONS",
-        "access-control-allow-origin": "*",
-        "connection": "close",
-        "content-length": "327",
-        "content-type": "application/json",
-        "date": "Fri, 24 Feb 2023 22:48:04 GMT",
-        "host": "jungle4.greymass.com",
-        "server": "nginx/1.18.0 (Ubuntu)"
-    },
     "status": 200,
     "json": {
         "account_name": "greymassnoop",

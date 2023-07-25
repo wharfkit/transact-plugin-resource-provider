@@ -1272,10 +1272,41 @@
     "@typescript-eslint/types" "5.45.0"
     eslint-visitor-keys "^3.3.0"
 
-"@wharfkit/session@^0.5.0":
-  version "0.5.0"
-  resolved "https://registry.yarnpkg.com/@wharfkit/session/-/session-0.5.0.tgz#8003c9c2eefd9335331623ceee2f3c02e5dbce40"
-  integrity sha512-UhOUMmhRkljDTrJrPoD/APfEmA9V1iMNuH1ZqqN1CmQgZ7Jz/6FnR7Ams7peEaxAIVP1bY/GN1lie98+8CEL8g==
+"@wharfkit/abicache@^1.0.0":
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/@wharfkit/abicache/-/abicache-1.0.0.tgz#d9f7dc38dce0e9cffd7de351b366c1aa1b719c46"
+  integrity sha512-crfXFPlmxkqDdgvVIFjcHGx3kkLdXj2JbUsu3XYnxJf91tWWbHAfNn2ba3UifsFDTE9BdUFd2Cz+FLTi464Gew==
+  dependencies:
+    "@greymass/eosio" "^0.6.10"
+    eosio-signing-request "^2.5.3"
+    pako "^2.0.4"
+    tslib "^2.1.0"
+
+"@wharfkit/contract@^0.2.1":
+  version "0.2.1"
+  resolved "https://registry.yarnpkg.com/@wharfkit/contract/-/contract-0.2.1.tgz#df8353a71b18bbbfdc01945f4bc955dad8c42c00"
+  integrity sha512-fwxqBYTfN3QFJEqCvijLbVE6eY4K+6Y04E0lI8U/IINKtazyMeou+dPuEqwTWMqwaRtKo5Re5gtARi6LgrRR2A==
+  dependencies:
+    "@greymass/eosio" "^0.6.10"
+    "@wharfkit/abicache" "^1.0.0"
+    eosio-signing-request "^2.5.3"
+    tslib "^2.1.0"
+
+"@wharfkit/mock-data@^1.0.0-beta11":
+  version "1.0.0-beta11"
+  resolved "https://registry.yarnpkg.com/@wharfkit/mock-data/-/mock-data-1.0.0-beta11.tgz#6233eb5c3a22f27d04e8f112952bab3057df885c"
+  integrity sha512-llLZtnXdoK6x4cZv3BT64WiRwW4k1Rp672Fn1BgBqoFCfLHuqvejku/B6UCQryPjil/BOAFH+z3iRF28XOciKg==
+  dependencies:
+    "@greymass/eosio" "^0.6.10"
+    "@wharfkit/session" "^1.0.0-beta4"
+    "@wharfkit/wallet-plugin-privatekey" "^0.5.0"
+    node-fetch "^2.6.1"
+    tslib "^2.1.0"
+
+"@wharfkit/session@^1.0.0-beta4":
+  version "1.0.0-beta4"
+  resolved "https://registry.yarnpkg.com/@wharfkit/session/-/session-1.0.0-beta4.tgz#68f8cc85d048e801c4c24973956a6fe35964d192"
+  integrity sha512-YnCBra6+GZHHnalS208L14KN7tWy2wat5gTcDkfhBtL/Ol/B7MvvCvA9VUoELlgaq4dSknd6MbmzE77BcgF+mQ==
   dependencies:
     "@greymass/eosio" "^0.6.10"
     eosio-signing-request "^2.5.3"

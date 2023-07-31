@@ -1,7 +1,7 @@
 {
     "name": "@wharfkit/transact-plugin-resource-provider",
     "description": "Plugin to automatically provide network resources for transactions using the Resource Provider implementation standard.",
-    "version": "0.5.0",
+    "version": "1.0.0-beta1",
     "homepage": "https://github.com/wharfkit/transact-plugin-resource-provider",
     "license": "BSD-3-Clause",
     "main": "lib/transact-plugin-resource-provider.js",
@@ -19,7 +19,7 @@
         "tslib": "^2.1.0"
     },
     "peerDependencies": {
-        "@wharfkit/session": "^0.5.0"
+        "@wharfkit/session": "^1.0.0"
     },
     "devDependencies": {
         "@babel/core": "^7.20.12",
@@ -37,10 +37,10 @@
         "@types/node": "^18.7.18",
         "@typescript-eslint/eslint-plugin": "^5.20.0",
         "@typescript-eslint/parser": "^5.20.0",
-        "@wharfkit/contract": "^0.2.1",
-        "@wharfkit/mock-data": "^1.0.0-beta11",
-        "@wharfkit/session": "^1.0.0-beta4",
-        "@wharfkit/wallet-plugin-privatekey": "^0.5.0",
+        "@wharfkit/contract": "^0.3.3",
+        "@wharfkit/mock-data": "^1.0.2",
+        "@wharfkit/session": "^1.0.0",
+        "@wharfkit/wallet-plugin-privatekey": "^1.0.0",
         "chai": "^4.3.4",
         "eslint": "^8.13.0",
         "eslint-config-prettier": "^8.1.0",

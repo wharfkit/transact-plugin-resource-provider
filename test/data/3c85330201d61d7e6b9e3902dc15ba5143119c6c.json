@@ -9,24 +9,24 @@
     "json": {
         "server_version": "43873e82",
         "chain_id": "38b1d7815474d0c60683ecbea321d723e83f5da6ae5f1c1f9fecc69d9ba96465",
-        "head_block_num": 66667576,
-        "last_irreversible_block_num": 66667244,
-        "last_irreversible_block_id": "03f942ec64d0f795b687c8c37db6e67273ddf857a2f6238245faef1b618a3e68",
-        "head_block_id": "03f94438aa748d198a1a3de19ce8df6cc75e830afca581c9f49c9acae33a24f6",
-        "head_block_time": "2023-07-25T23:03:45.500",
-        "head_block_producer": "cryptobloks",
+        "head_block_num": 67688199,
+        "last_irreversible_block_num": 67687870,
+        "last_irreversible_block_id": "0408d5be695ccf7a1377fc3f1b80af28bdf9dbae202f30ab37398b4962f284ac",
+        "head_block_id": "0408d707454246c2ef0de488410db320a2a31b31f7b7eacec89a5703a9d29dff",
+        "head_block_time": "2023-07-31T20:57:14.000",
+        "head_block_producer": "cryptolions",
         "virtual_block_cpu_limit": 100000000,
         "virtual_block_net_limit": 1048576000,
         "block_cpu_limit": 100000,
         "block_net_limit": 1048576,
         "server_version_string": "v3.2.3-hotfix",
-        "fork_db_head_block_num": 66667576,
-        "fork_db_head_block_id": "03f94438aa748d198a1a3de19ce8df6cc75e830afca581c9f49c9acae33a24f6",
+        "fork_db_head_block_num": 67688199,
+        "fork_db_head_block_id": "0408d707454246c2ef0de488410db320a2a31b31f7b7eacec89a5703a9d29dff",
         "server_full_version_string": "v3.2.3-hotfix-43873e822160be5e5f364fd867e3c7d27162cd0c-dirty",
-        "total_cpu_weight": 299106,
-        "total_net_weight": 394106,
-        "earliest_available_block_num": 66480477,
-        "last_irreversible_block_time": "2023-07-25T23:00:59.500"
+        "total_cpu_weight": 299461,
+        "total_net_weight": 394461,
+        "earliest_available_block_num": 67512014,
+        "last_irreversible_block_time": "2023-07-31T20:54:29.500"
     },
-    "text": "{\"server_version\":\"43873e82\",\"chain_id\":\"38b1d7815474d0c60683ecbea321d723e83f5da6ae5f1c1f9fecc69d9ba96465\",\"head_block_num\":66667576,\"last_irreversible_block_num\":66667244,\"last_irreversible_block_id\":\"03f942ec64d0f795b687c8c37db6e67273ddf857a2f6238245faef1b618a3e68\",\"head_block_id\":\"03f94438aa748d198a1a3de19ce8df6cc75e830afca581c9f49c9acae33a24f6\",\"head_block_time\":\"2023-07-25T23:03:45.500\",\"head_block_producer\":\"cryptobloks\",\"virtual_block_cpu_limit\":100000000,\"virtual_block_net_limit\":1048576000,\"block_cpu_limit\":100000,\"block_net_limit\":1048576,\"server_version_string\":\"v3.2.3-hotfix\",\"fork_db_head_block_num\":66667576,\"fork_db_head_block_id\":\"03f94438aa748d198a1a3de19ce8df6cc75e830afca581c9f49c9acae33a24f6\",\"server_full_version_string\":\"v3.2.3-hotfix-43873e822160be5e5f364fd867e3c7d27162cd0c-dirty\",\"total_cpu_weight\":299106,\"total_net_weight\":394106,\"earliest_available_block_num\":66480477,\"last_irreversible_block_time\":\"2023-07-25T23:00:59.500\"}"
+    "text": "{\"server_version\":\"43873e82\",\"chain_id\":\"38b1d7815474d0c60683ecbea321d723e83f5da6ae5f1c1f9fecc69d9ba96465\",\"head_block_num\":67688199,\"last_irreversible_block_num\":67687870,\"last_irreversible_block_id\":\"0408d5be695ccf7a1377fc3f1b80af28bdf9dbae202f30ab37398b4962f284ac\",\"head_block_id\":\"0408d707454246c2ef0de488410db320a2a31b31f7b7eacec89a5703a9d29dff\",\"head_block_time\":\"2023-07-31T20:57:14.000\",\"head_block_producer\":\"cryptolions\",\"virtual_block_cpu_limit\":100000000,\"virtual_block_net_limit\":1048576000,\"block_cpu_limit\":100000,\"block_net_limit\":1048576,\"server_version_string\":\"v3.2.3-hotfix\",\"fork_db_head_block_num\":67688199,\"fork_db_head_block_id\":\"0408d707454246c2ef0de488410db320a2a31b31f7b7eacec89a5703a9d29dff\",\"server_full_version_string\":\"v3.2.3-hotfix-43873e822160be5e5f364fd867e3c7d27162cd0c-dirty\",\"total_cpu_weight\":299461,\"total_net_weight\":394461,\"earliest_available_block_num\":67512014,\"last_irreversible_block_time\":\"2023-07-31T20:54:29.500\"}"
 }

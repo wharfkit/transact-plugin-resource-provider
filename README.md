@@ -25,10 +25,15 @@ Include when configuring the Session Kit:
 ```ts
 import {TransactPluginResourceProvider} from '@wharfkit/transact-plugin-resource-provider'
 
-const kit = new SessionKit({
-    // ... your other options
-    transactPlugins: [new TransactPluginResourceProvider()],
-})
+const kit = new SessionKit(
+    {
+        // ... your session kit args
+    },
+    {
+        // ... your other options
+        transactPlugins: [new TransactPluginResourceProvider()],
+    }
+)
 ```
 
 Or when you are manually configuring a Session:
@@ -36,10 +41,15 @@ Or when you are manually configuring a Session:
 ```ts
 import {TransactPluginResourceProvider} from '@wharfkit/transact-plugin-resource-provider'
 
-const session = new Session({
-    // ... your other options
-    transactPlugins: [new TransactPluginResourceProvider()],
-})
+const session = new Session(
+    {
+        // ... your session kit args
+    },
+    {
+        // ... your other options
+        transactPlugins: [new TransactPluginResourceProvider()],
+    }
+)
 ```
 
 The plugin is also capable of utilizing any API that conforms to the [Resource Provider API specification](https://forums.eoscommunity.org/t/initial-specification-for-the-resource-provider-api-endpoint/1546). To change the default endpoints, specify them in the constructor as a key/value pair using the chainId and URL.
@@ -47,17 +57,22 @@ The plugin is also capable of utilizing any API that conforms to the [Resource P
 ```ts
 import {TransactPluginResourceProvider} from '@wharfkit/transact-plugin-resource-provider'
 
-const session = new Session({
-    // ... your other options
-    transactPlugins: [
-        new TransactPluginResourceProvider({
-            endpoints: {
-                '73e4385a2708e6d7048834fbc1079f2fabb17b3c125b146af438971e90716c4d':
-                    'https://jungle4.greymass.com',
-            },
-        }),
-    ],
-})
+const session = new Session(
+    {
+        // ... your session kit args
+    },
+    {
+        // ... your other session kit options
+        transactPlugins: [
+            new TransactPluginResourceProvider({
+                endpoints: {
+                    '73e4385a2708e6d7048834fbc1079f2fabb17b3c125b146af438971e90716c4d':
+                        'https://jungle4.greymass.com',
+                },
+            }),
+        ],
+    }
+)
 ```
 
 The full list of options that can be passed in during instantiation are defined in the `ResourceProviderOptions`:

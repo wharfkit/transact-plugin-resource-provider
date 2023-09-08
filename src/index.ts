@@ -341,9 +341,7 @@ export class TransactPluginResourceProvider extends AbstractTransactPlugin {
                         throw e
                     }
                     // Otherwise if it wasn't a cancel, it was a reject, and continue without modification
-                    return new Promise((r) =>
-                        r({request: modifiedRequest})
-                    ) as Promise<TransactHookResponse>
+                    return new Promise((r) => r({request})) as Promise<TransactHookResponse>
                 })
                 .finally(() => {
                     clearTimeout(timer) // TODO: Remove this, it's just here for testing

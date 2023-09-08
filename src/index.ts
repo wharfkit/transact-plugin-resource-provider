@@ -11,6 +11,7 @@ import {
     Serializer,
     Signature,
     SigningRequest,
+    SigningRequestCreateArguments,
     Struct,
     TransactContext,
     TransactHookResponse,
@@ -141,12 +142,17 @@ export class TransactPluginResourceProvider extends AbstractTransactPlugin {
         if (request.requiresTapos()) {
             const info = await context.client.v1.chain.get_info()
             const header = info.getTransactionHeader(120)
-            modifiedRequest = await SigningRequest.create(
-                {
-                    transaction: request.resolveTransaction(abis, context.permissionLevel, header),
-                },
-                context.esrOptions
-            )
+            const modifiedArgs: SigningRequestCreateArguments = {
+                transaction: request.resolveTransaction(abis, context.permissionLevel, header),
+            }
+            modifiedArgs.chainId = request.getChainId()
+            if (request.isMultiChain()) {
+                const ids = request.getChainIds()
+                if (ids) {
+                    modifiedArgs.chainIds = ids
+                }
+            }
+            modifiedRequest = await SigningRequest.create(modifiedArgs, context.esrOptions)
         } else {
             modifiedRequest = await SigningRequest.create(
                 {

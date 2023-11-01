@@ -237,23 +237,26 @@ export class TransactPluginResourceProvider extends AbstractTransactPlugin {
 
         // TODO: Check that all the addedActions are allowed via this.allowActions
 
+        let token = '4,TOKEN'
+
         // Find any transfer actions that were added to the transaction, which we assume are fees
         const addedFees = addedActions
             .filter(
                 (action: Action) =>
                     action.account.equals('eosio.token') && action.name.equals('transfer')
             )
-            .map(
-                (action: Action) =>
-                    Serializer.decode({
-                        data: action.data,
-                        type: Transfer,
-                    }).quantity
-            )
+            .map((action: Action) => {
+                const transfer = Serializer.decode({
+                    data: action.data,
+                    type: Transfer,
+                })
+                token = `${transfer.quantity.symbol.precision},${transfer.quantity.symbol.code}`
+                return transfer.quantity
+            })
             .reduce((total: Asset, fee: Asset) => {
                 total.units.add(fee.units)
                 return total
-            }, Asset.from('0.0000 EOS'))
+            }, Asset.fromUnits(0, token))
 
         // If the resource provider offered transaction with a fee, but the fee was higher than allowed, return the original transaction.
         if (this.maxFee) {

@@ -4,8 +4,8 @@ A `transactPlugin` for use with the `@wharfkit/session` library that provides re
 
 ## Caveats
 
--   Resource Provider API endpoint must conform to the [Resource Provider API specification](https://forums.eoscommunity.org/t/initial-specification-for-the-resource-provider-api-endpoint/1546).
--   To enable fees, the `allowFees` parameter must be specified and set to `true`.
+-   Resource Provider API endpoint must conform to the [Resource Provider API specification](https://wharfkit.com/docs/utilities/resource-provider-spec).
+-   To allow fees from the Resource Provider, the `allowFees` parameter must be specified and set to `true`.
 -   Any fees must be paid in the networks system token, deployed on the `eosio.token` account using the standard token contract.
 
 ## Installation

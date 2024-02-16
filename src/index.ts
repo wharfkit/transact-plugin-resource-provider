@@ -172,7 +172,6 @@ export class TransactPluginResourceProvider extends AbstractTransactPlugin {
         const response = await context.fetch(url, {
             method: 'POST',
             body: JSON.stringify({
-                ref: 'unittest',
                 request: modifiedRequest,
                 signer: context.permissionLevel,
             }),

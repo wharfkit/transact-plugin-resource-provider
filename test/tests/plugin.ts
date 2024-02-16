@@ -391,7 +391,7 @@ suite('resource provider', function () {
             const session = new Session(
                 {
                     ...mockSessionArgs,
-                    permissionLevel: 'wharfkit1113@test',
+                    permissionLevel: 'wharfkit1113@active',
                 },
                 {
                     ...mockSessionOptions,
@@ -400,21 +400,29 @@ suite('resource provider', function () {
             )
             const kit = new ContractKit(
                 {
-                    client: makeClient(),
+                    client: makeClient('https://jungle4.greymass.com'),
                 },
                 {
                     abiCache: session.abiCache,
                 }
             )
             const contract = await kit.load('eosio')
-            const action = contract.action('claimrewards', {owner: 'wharfkit1113'})
+            const action = contract.action('buyram', {
+                payer: 'wharfkit1113',
+                receiver: 'wharfkit1113',
+                quant: '1.0000 EOS',
+            })
             const result = await session.transact({action})
-            @Struct.type('claimrewards')
-            class Claimrewards extends Struct {
-                @Struct.field(Name) owner!: Name
+            @Struct.type('buyram')
+            class buyram extends Struct {
+                @Struct.field(Name) payer!: Name
+                @Struct.field(Name) receiver!: Name
+                @Struct.field(Asset) quant!: Asset
             }
-            const claim = Claimrewards.from(result.transaction?.actions[1].data)
-            assert.isTrue(claim.owner.equals('wharfkit1113'))
+            const claim = buyram.from(result.transaction?.actions[2].data)
+            assert.isTrue(claim.payer.equals('wharfkit1113'))
+            assert.isTrue(claim.receiver.equals('wharfkit1113'))
+            assert.isTrue(claim.quant.equals('1.0000 EOS'))
             assert.isTrue(
                 result.transaction?.actions[0].authorization[0].actor.equals('greymassfuel')
             )
@@ -424,7 +432,9 @@ suite('resource provider', function () {
             assert.isTrue(
                 result.transaction?.actions[1].authorization[0].actor.equals('wharfkit1113')
             )
-            assert.isTrue(result.transaction?.actions[1].authorization[0].permission.equals('test'))
+            assert.isTrue(
+                result.transaction?.actions[1].authorization[0].permission.equals('active')
+            )
         })
 
         test('from full transaction', async function () {

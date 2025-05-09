@@ -52,7 +52,7 @@ const session = new Session(
 )
 ```
 
-The plugin is also capable of utilizing any API that conforms to the [Resource Provider API specification](https://forums.eoscommunity.org/t/initial-specification-for-the-resource-provider-api-endpoint/1546). To change the default endpoints, specify them in the constructor as a key/value pair using the chainId and URL.
+The plugin is also capable of utilizing any API that conforms to the [Resource Provider API specification](https://wharfkit.com/docs/utilities/resource-provider-spec). To change the default endpoints, specify them in the constructor as a key/value pair using the chainId and URL.
 
 ```ts
 import {TransactPluginResourceProvider} from '@wharfkit/transact-plugin-resource-provider'

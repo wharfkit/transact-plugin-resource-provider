@@ -242,7 +242,8 @@ export class TransactPluginResourceProvider extends AbstractTransactPlugin {
         const addedFees = addedActions
             .filter(
                 (action: Action) =>
-                    action.account.equals('eosio.token') && action.name.equals('transfer')
+                    (action.account.equals('eosio.token') && action.name.equals('transfer')) ||
+                    (action.account.equals('core.vaulta') && action.name.equals('transfer'))
             )
             .map((action: Action) => {
                 const transfer = Serializer.decode({

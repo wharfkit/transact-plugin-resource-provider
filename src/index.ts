@@ -178,8 +178,10 @@ export class TransactPluginResourceProvider extends AbstractTransactPlugin {
         })
         const json: ResourceProviderResponse = await response.json()
 
-        // If the resource provider refused to process this request, return the original request without modification.
-        if (response.status === 400) {
+        // If the resource provider refused to process this request
+        // OR the status isn't an expected 200 or 402, 
+        // return the original request without modification.
+        if (response.status === 400 || ![200, 402].includes(response.status)) {
             return {
                 request,
             }

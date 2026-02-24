@@ -17,7 +17,9 @@ import {
     TransactHookResponse,
     TransactHookTypes,
     Transaction,
+    UInt32,
 } from '@wharfkit/session'
+import {Resources} from '@wharfkit/resources'
 
 import defaultTranslations from './translations'
 import {getNewActions, hasOriginalActions} from './utils'
@@ -52,6 +54,13 @@ export class Transfer extends Struct {
     @Struct.field(Name) to!: Name
     @Struct.field(Asset) quantity!: Asset
     @Struct.field('string') memo!: string
+}
+
+@Struct.type('buyrambytes')
+export class BuyRAMBytes extends Struct {
+    @Struct.field(Name) payer!: Name
+    @Struct.field(Name) receiver!: Name
+    @Struct.field(UInt32) bytes!: UInt32
 }
 
 export const defaultOptions = {
@@ -236,29 +245,92 @@ export class TransactPluginResourceProvider extends AbstractTransactPlugin {
         // Retrieve all newly appended actions from the modified transaction
         const addedActions = getNewActions(modifiedRequest.getRawTransaction(), modifiedTransaction)
 
-        // TODO: Check that all the addedActions are allowed via this.allowActions
+        for (const action of addedActions) {
+            const isNoop = action.name.equals('noop')
+            const isTransfer =
+                action.name.equals('transfer') &&
+                (action.account.equals('eosio.token') || action.account.equals('core.vaulta'))
+            const isBuyRAMBytes =
+                action.name.equals('buyrambytes') &&
+                (action.account.equals('eosio') || action.account.equals('core.vaulta'))
 
-        let token = '4,TOKEN'
+            if (!isNoop && !isTransfer && !isBuyRAMBytes) {
+                if (context.ui) {
+                    context.ui.status(
+                        `${t('rejected.unexpected-action', {
+                            default:
+                                'The resource provider added an unexpected action to the transaction.',
+                        })} ${t('will-continue', {
+                            default: 'The transaction will continue without the resource provider.',
+                        })}`
+                    )
+                }
+                return {
+                    request,
+                }
+            }
 
-        // Find any transfer actions that were added to the transaction, which we assume are fees
-        const addedFees = addedActions
+            if (isBuyRAMBytes) {
+                const decoded = Serializer.decode({
+                    data: action.data,
+                    type: BuyRAMBytes,
+                })
+                if (!decoded.receiver.equals(context.permissionLevel.actor)) {
+                    if (context.ui) {
+                        context.ui.status(
+                            `${t('rejected.invalid-buyrambytes', {
+                                default:
+                                    'The resource provider added a RAM purchase for an account other than the requesting account.',
+                            })} ${t('will-continue', {
+                                default:
+                                    'The transaction will continue without the resource provider.',
+                            })}`
+                        )
+                    }
+                    return {
+                        request,
+                    }
+                }
+            }
+        }
+
+        const transferFees = addedActions
             .filter(
                 (action: Action) =>
                     (action.account.equals('eosio.token') && action.name.equals('transfer')) ||
                     (action.account.equals('core.vaulta') && action.name.equals('transfer'))
             )
             .map((action: Action) => {
-                const transfer = Serializer.decode({
+                return Serializer.decode({
                     data: action.data,
                     type: Transfer,
-                })
-                token = `${transfer.quantity.symbol.precision},${transfer.quantity.symbol.code}`
-                return transfer.quantity
+                }).quantity
             })
-            .reduce((total: Asset, fee: Asset) => {
-                total.units.add(fee.units)
-                return total
-            }, Asset.fromUnits(0, token))
+
+        const ramActions = addedActions.filter(
+            (action: Action) =>
+                action.name.equals('buyrambytes') &&
+                (action.account.equals('eosio') || action.account.equals('core.vaulta'))
+        )
+
+        const ramFees: Asset[] = []
+        if (ramActions.length > 0) {
+            const resources = new Resources({api: context.client})
+            const ramState = await resources.v1.ram.get_state()
+            for (const action of ramActions) {
+                const decoded = Serializer.decode({
+                    data: action.data,
+                    type: BuyRAMBytes,
+                })
+                ramFees.push(ramState.price_per(Number(decoded.bytes)))
+            }
+        }
+
+        const allFees = [...transferFees, ...ramFees]
+        const addedFees = allFees.reduce((total: Asset, fee: Asset) => {
+            total.units.add(fee.units)
+            return total
+        }, Asset.fromUnits(0, allFees.length > 0 ? allFees[0].symbol : '4,TOKEN'))
 
         // If the resource provider offered transaction with a fee, but the fee was higher than allowed, return the original transaction.
         if (this.maxFee) {

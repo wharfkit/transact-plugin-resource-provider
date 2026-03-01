@@ -178,14 +178,22 @@ export class TransactPluginResourceProvider extends AbstractTransactPlugin {
         const url = `${endpoint}/v1/resource_provider/request_transaction`
 
         // Perform the request to the resource provider.
-        const response = await context.fetch(url, {
-            method: 'POST',
-            body: JSON.stringify({
-                request: modifiedRequest,
-                signer: context.permissionLevel,
-            }),
-        })
-        const json: ResourceProviderResponse = await response.json()
+        let response: Response
+        let json: ResourceProviderResponse
+        try {
+            response = await context.fetch(url, {
+                method: 'POST',
+                body: JSON.stringify({
+                    request: modifiedRequest,
+                    signer: context.permissionLevel,
+                }),
+            })
+            json = await response.json()
+        } catch (e) {
+            return {
+                request,
+            }
+        }
 
         // If the resource provider refused to process this request
         // OR the status isn't an expected 200 or 402,

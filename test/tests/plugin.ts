@@ -335,6 +335,58 @@ suite('resource provider', function () {
                 assert.fail('No transaction was returned from transact call.')
             }
         })
+        test('gracefully handles network failure when endpoint is unreachable', async function () {
+            this.timeout(5000)
+            const session = new Session(
+                {
+                    ...mockSessionArgs,
+                    permissionLevel: 'wharfkit1113@test',
+                },
+                {
+                    ...mockSessionOptions,
+                    transactPlugins: [
+                        new TransactPluginResourceProvider({
+                            endpoints: {
+                                '73e4385a2708e6d7048834fbc1079f2fabb17b3c125b146af438971e90716c4d':
+                                    'https://unreachable.example.com',
+                            },
+                        }),
+                    ],
+                }
+            )
+            const action = {
+                authorization: [
+                    {
+                        actor: 'wharfkit1113',
+                        permission: 'test',
+                    },
+                ],
+                account: 'eosio.token',
+                name: 'transfer',
+                data: {
+                    from: 'wharfkit1113',
+                    to: 'wharfkittest',
+                    quantity: '0.0001 EOS',
+                    memo: 'wharfkit is the best... <3',
+                },
+            }
+            const response = await session.transact(
+                {
+                    action,
+                },
+                {broadcast: false}
+            )
+            if (response.resolved && response.transaction) {
+                assert.lengthOf(response.transaction?.actions, 1)
+                assert.isTrue(
+                    Action.from({...action, data: Transfer.from(action.data)}).data.equals(
+                        response.resolved?.transaction.actions[0].data
+                    )
+                )
+            } else {
+                assert.fail('No transaction was returned from transact call.')
+            }
+        })
         test('refuses request to unknown chain, returning original transaction', async function () {
             this.timeout(5000)
             const session = new Session(

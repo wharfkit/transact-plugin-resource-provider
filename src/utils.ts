@@ -28,7 +28,7 @@ export function hasOriginalActions(original: Transaction, modified: Transaction)
 
 export function getNewActions(original: Transaction, modified: Transaction): Action[] {
     return modified.actions.filter((modifiedAction: Action) => {
-        return original.actions.some((originalAction: Action) => {
+        return original.actions.every((originalAction: Action) => {
             // Ensure the original contract account matches
             const matchesOriginalContractAccount = originalAction.account.equals(
                 modifiedAction.account

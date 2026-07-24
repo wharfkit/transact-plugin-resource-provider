@@ -1331,10 +1331,10 @@
     js-big-decimal "^2.0.7"
     tslib "^2.1.0"
 
-"@wharfkit/session@^1.2.7", "@wharfkit/session@^1.7.0":
-  version "1.7.0"
-  resolved "https://registry.yarnpkg.com/@wharfkit/session/-/session-1.7.0.tgz#803932817941cbf5dcad257dbadb8afec86b463c"
-  integrity sha512-mLfa62RAqk2o05P7qkp8TScRrN7mlimxHy92E5QEiQHpvIVz/KacZmjMBpWd0SueqrWGdpMbjx4WkjypPcRWgg==
+"@wharfkit/session@1.6.1", "@wharfkit/session@^1.2.7", "@wharfkit/session@^1.6.1":
+  version "1.6.1"
+  resolved "https://registry.npmjs.org/@wharfkit/session/-/session-1.6.1.tgz#087856dc547fea7b5aff547ca9c984a772da9239"
+  integrity sha512-k6ntDGOe8bvD/Ps0erTPTFMdYVFrw5cRvPcEwxytlmRRcNV/M8xWcpCYWdmGDxa8QYqynf/hAkbVh1PSwRGl5A==
   dependencies:
     "@wharfkit/abicache" "^1.2.1"
     "@wharfkit/antelope" "^1.0.11"

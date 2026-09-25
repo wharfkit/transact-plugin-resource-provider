@@ -1,3 +1,6 @@
+> [!IMPORTANT]
+> This package lives in the WharfKit monorepo at [wharfkit/js/packages/transact-plugin-resource-provider](https://github.com/wharfkit/js/tree/dev/packages/transact-plugin-resource-provider), and this repository is archived. Open new issues and pull requests on [wharfkit/js](https://github.com/wharfkit/js).
+
 # @wharfkit/transact-plugin-resource-provider
 
 A `transactPlugin` for use with the `@wharfkit/session` library that provides resources to perform transactions.
